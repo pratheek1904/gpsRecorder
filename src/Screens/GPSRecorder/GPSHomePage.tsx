@@ -31,11 +31,12 @@ const GPSHomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   //functions to add user current location
   const handleAddLocation = async () => {
+    // console.log("clicked")
     if (await requestLocationPermission()) {
       setIsLoading(true);
       Geolocation.getCurrentPosition(
         position => {
-          useConsole('position', position);
+          // useConsole('position', position);
           const {latitude, longitude} = position?.coords;
           setLocation(prevLocation => [
             ...(prevLocation || []),
