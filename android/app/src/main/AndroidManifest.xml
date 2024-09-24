@@ -14,7 +14,13 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme"
-      android:supportsRtl="true">
+      android:supportsRtl="true"
+        android:hardwareAccelerated="true"
+      >
+      <meta-data android:name="com.google.android.geo.API_KEY"
+           android:value="e133141931b849e88232b5298044fb7c"
+           android:hardwareAccelerated="true"
+           />
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

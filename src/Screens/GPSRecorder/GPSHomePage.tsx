@@ -9,78 +9,77 @@ import {
   View,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import { Images } from '../../Assets/Images';
 import { requestLocationPermission } from '../../Components/RequestPermisson';
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../Utils/helpers';
 import {
   COLORS,
   EmptyRecords,
   Header,
+  Images,
   LocationsList,
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
   Typography,
+  useConsole
 } from './Components/GPSImports';
-
 
 export interface locationProps {
   latitude: number;
   longitude: number;
-  // id:Date;
 }
 const GPSHomePage = () => {
   const [location, setLocation] = useState<locationProps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  //functions to add user current location
   const handleAddLocation = async () => {
     if (await requestLocationPermission()) {
       setIsLoading(true);
       Geolocation.getCurrentPosition(
         position => {
-          console.log(position, 'position');
+          useConsole('position', position);
           const {latitude, longitude} = position?.coords;
           setLocation(prevLocation => [
             ...(prevLocation || []),
             {
               latitude: latitude,
               longitude: longitude,
-                        },
+            },
           ]);
-          AsyncStorage.setItem(
+          AsyncStorage?.setItem(
             'locationData',
             JSON.stringify([
               ...location,
               {
                 latitude: latitude,
                 longitude: longitude,
-
               },
             ]),
           );
         },
         error => {
-          console.log(error.code, error.message, 'handleAddLocation');
+          useConsole('handleAddLocation', error.code, error.message);
         },
         {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
       );
       setIsLoading(false);
     }
   };
+    //functions to remove user current location
   const deleteLocation = (val: locationProps, i: number) => {
     const filteredVal = location.filter((elem, index) => index !== i);
     setLocation(filteredVal);
-    AsyncStorage.setItem(
-      'locationData',
-      JSON.stringify(filteredVal),
-    );
+    AsyncStorage.setItem('locationData', JSON.stringify(filteredVal));
   };
 
   useEffect(() => {
-    const getStoredData=async()=>{
-      const persistedData = await AsyncStorage.getItem('locationData');
-      persistedData&&setLocation(JSON.parse(persistedData))
-    }
-    getStoredData()
-
+    const getStoredData = async () => {
+      const persistedData = await AsyncStorage?.getItem('locationData');
+      persistedData && setLocation(JSON?.parse(persistedData));
+    };
+    getStoredData();
   }, []);
+  const loader = () => {
+    return <ActivityIndicator color={COLORS.primary} />;
+  };
 
   return (
     <View style={styles.homeContainer}>
@@ -90,9 +89,9 @@ const GPSHomePage = () => {
       </View>
       <View style={styles.Recordconatiner}>
         {isLoading ? (
-          <ActivityIndicator />
+          loader()
         ) : (
-          <Suspense fallback={<ActivityIndicator />}>
+          <Suspense fallback={loader()}>
             {location?.length === 0 ? (
               <EmptyRecords />
             ) : (

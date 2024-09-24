@@ -9,6 +9,7 @@ const App = () => {
   useEffect(()=>{
     requestLocationPermission()
   },[])
+  
   return (
     <SafeAreaView style={[styles.container]}>
       <StatusBar
